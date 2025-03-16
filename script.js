@@ -1,59 +1,52 @@
-const form = document.getElementById('contactForm');
-const responseMessage = document.getElementById('responseMessage');
+document.getElementById('contactForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // ✅ Get form values
     const formData = {
-        name: form.name.value.trim(),
-        email: form.email.value.trim(),
-        message: form.message.value.trim(),
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value
     };
 
-    // ✅ Client-side validation
-    if (!formData.name || !formData.email || !formData.message) {
-        showMessage('All fields are required!', 'error');
-        return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-        showMessage('Invalid email format!', 'error');
-        return;
-    }
-
     try {
-        // ✅ Send form data to backend
-        const res = await fetch('http://localhost:3000/submit-form', {
+        const response = await fetch('https://contactform-eo4i.onrender.com/submit-form', { // Use correct backend URL
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (data.success) {
-            showMessage('Message sent successfully!', 'success');
-            form.reset(); // ✅ Reset form after submission
+        if (response.ok) {
+            // Show success message
+            const responseMessage = document.getElementById('responseMessage');
+            responseMessage.textContent = 'Message sent successfully!';
+            responseMessage.style.color = '#4caf50';
+            responseMessage.style.opacity = 1;
+
+            // Clear the form after submission
+            document.getElementById('contactForm').reset();
+
+            // Hide success message after 10 seconds
+            setTimeout(() => {
+                responseMessage.style.opacity = 0;
+            }, 10000);
         } else {
-            showMessage(data.message, 'error');
+            throw new Error(data.message || 'Something went wrong');
         }
     } catch (error) {
         console.error('Error:', error);
-        showMessage('Something went wrong. Please try again.', 'error');
+
+        // Show error message
+        const responseMessage = document.getElementById('responseMessage');
+        responseMessage.textContent = 'Something went wrong. Please try again.';
+        responseMessage.style.color = '#ff4d4d';
+        responseMessage.style.opacity = 1;
+
+        // Hide error message after 10 seconds
+        setTimeout(() => {
+            responseMessage.style.opacity = 0;
+        }, 10000);
     }
 });
-
-// ✅ Function to display success message
-function showMessage(message, type) {
-    responseMessage.textContent = message;
-    responseMessage.style.color = type === 'success' ? '#4caf50' : '#ff4d4d';
-    responseMessage.style.opacity = '1';
-
-    // ✅ Disappear after 10 seconds
-    setTimeout(() => {
-        responseMessage.style.opacity = '0';
-        responseMessage.textContent = '';
-    }, 10000);
-}
