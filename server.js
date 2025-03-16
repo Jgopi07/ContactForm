@@ -10,19 +10,19 @@ const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 app.use(cors());
 
-// ✅ Serve the HTML file explicitly before serving static files
+// ✅ Serve the HTML file first
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ✅ Serve static files after serving index.html
+// ✅ Serve static files (CSS, JS, etc.) after the HTML file
 app.use(express.static(path.join(__dirname)));
 
 // ✅ Middleware to parse JSON data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Endpoint to handle form submission
+// ✅ Endpoint to receive form data
 app.post('/submit-form', (req, res) => {
     const { name, email, message } = req.body;
 
@@ -59,7 +59,7 @@ app.post('/submit-form', (req, res) => {
     });
 });
 
-// ✅ Endpoint to fetch submitted data (optional)
+// ✅ Route to get submitted data (optional)
 app.get('/get-data', (req, res) => {
     fs.readFile('data.json', 'utf8', (err, data) => {
         if (err) {
@@ -69,5 +69,10 @@ app.get('/get-data', (req, res) => {
     });
 });
 
-// ✅ Start server with dynamic port
+// ✅ Catch-all route to handle other requests
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ✅ Start server
 app.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));
