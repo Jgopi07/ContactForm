@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 app.use(cors());
 
-// ✅ Serve the HTML file explicitly before static files
+// ✅ Serve the HTML file explicitly before serving static files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ✅ Serve static files
-app.use(express.static(__dirname));
+// ✅ Serve static files after serving index.html
+app.use(express.static(path.join(__dirname)));
 
 // ✅ Middleware to parse JSON data
 app.use(express.json());
