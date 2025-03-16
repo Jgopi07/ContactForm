@@ -1,50 +1,53 @@
-document.getElementById('contactForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
 
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        message: document.getElementById('message').value
-    };
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-    try {
-        const response = await fetch('https://contactform-eo4i.onrender.com/submit-form', { // Use correct backend URL
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+        // Get form data
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            message: document.getElementById('message').value
+        };
 
-        const data = await response.json();
-
-        if (response.ok) {
-            // Show success message
-            const responseMessage = document.getElementById('responseMessage');
-            responseMessage.textContent = 'Message sent successfully!';
-            responseMessage.style.color = '#4caf50';
-            responseMessage.style.opacity = 1;
-
-            // Clear the form after submission
-            document.getElementById('contactForm').reset();
-
-            // Hide success message after 10 seconds
-            setTimeout(() => {
-                responseMessage.style.opacity = 0;
-            }, 10000);
-        } else {
-            throw new Error(data.message || 'Something went wrong');
+        if (!formData.name || !formData.email || !formData.message) {
+            displayMessage('Please fill in all fields.', '#ff4d4d'); // Red color for errors
+            return;
         }
-    } catch (error) {
-        console.error('Error:', error);
 
-        // Show error message
+        try {
+            // Send data to backend
+            const response = await fetch('https://contactform-eo4i.onrender.com/submit-form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                displayMessage('Message sent successfully!', '#4caf50'); // Green color for success
+
+                // Reset the form
+                form.reset();
+            } else {
+                throw new Error(data.message || 'Something went wrong');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            displayMessage('Something went wrong. Please try again.', '#ff4d4d');
+        }
+    });
+
+    // Function to display success/error message
+    function displayMessage(message, color) {
         const responseMessage = document.getElementById('responseMessage');
-        responseMessage.textContent = 'Something went wrong. Please try again.';
-        responseMessage.style.color = '#ff4d4d';
+        responseMessage.textContent = message;
+        responseMessage.style.color = color;
         responseMessage.style.opacity = 1;
 
-        // Hide error message after 10 seconds
+        // Hide message after 10 seconds
         setTimeout(() => {
             responseMessage.style.opacity = 0;
         }, 10000);

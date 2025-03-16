@@ -10,13 +10,19 @@
     <div class="container">
         <h2>Contact Us</h2>
         <form id="contactForm">
-            <input type="text" name="name" placeholder="Your Name" required />
-            <input type="email" name="email" placeholder="Your Email" required />
-            <textarea name="message" placeholder="Your Message" required></textarea>
-            <button type="submit">Submit</button>
-        </form>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea id="message" placeholder="Your Message" required></textarea>
+    <button type="submit">Submit</button>
+</form>
+
         <!-- ✅ Success Message -->
-        <p id="responseMessage"></p>
+        <p id="responseMessage" style="
+    margin-top: 10px;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+"></p>
     </div>
 
     <script src="script.js"></script>
