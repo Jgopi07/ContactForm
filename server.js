@@ -4,28 +4,24 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Use Render's assigned port
 
-// ✅ CORS Setup
+// ✅ Middleware to parse JSON and URL-encoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ CORS setup to allow cross-origin requests
 const cors = require('cors');
 app.use(cors());
 
-// ✅ Serve the HTML file first
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// ✅ Serve static files (CSS, JS, etc.) after the HTML file
+// ✅ Serve static files (CSS, JS, HTML)
 app.use(express.static(path.join(__dirname)));
-
-// ✅ Middleware to parse JSON data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // ✅ Endpoint to receive form data
 app.post('/submit-form', (req, res) => {
     const { name, email, message } = req.body;
 
+    // ✅ Validate input data
     if (!name || !email || !message) {
         return res.status(400).json({ success: false, message: 'All fields are required!' });
     }
@@ -38,28 +34,39 @@ app.post('/submit-form', (req, res) => {
         date: new Date().toLocaleString()
     };
 
+    // ✅ Read existing data from 'data.json'
     fs.readFile('data.json', 'utf8', (err, data) => {
         let jsonData = [];
         if (!err && data) {
             try {
                 jsonData = JSON.parse(data);
             } catch (parseError) {
+                console.error('Error parsing JSON:', parseError);
                 return res.status(500).json({ success: false, message: 'Error reading data.' });
             }
         }
 
+        // ✅ Add new data
         jsonData.push(newData);
 
+        // ✅ Write updated data to 'data.json'
         fs.writeFile('data.json', JSON.stringify(jsonData, null, 2), (err) => {
             if (err) {
+                console.error('Error saving data:', err);
                 return res.status(500).json({ success: false, message: 'Failed to save data!' });
             }
+            console.log('✅ New form submission:', newData);
             res.json({ success: true, message: 'Message sent successfully!' });
         });
     });
 });
 
-// ✅ Route to get submitted data (optional)
+// ✅ Root route to serve the HTML file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ✅ Route to retrieve submitted data (Optional - For testing)
 app.get('/get-data', (req, res) => {
     fs.readFile('data.json', 'utf8', (err, data) => {
         if (err) {
@@ -69,10 +76,5 @@ app.get('/get-data', (req, res) => {
     });
 });
 
-// ✅ Catch-all route to handle other requests
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// ✅ Start server
+// ✅ Start server with dynamic port
 app.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));
