@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Use Render's assigned port
@@ -11,7 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ CORS setup to allow cross-origin requests
-const cors = require('cors');
 app.use(cors());
 
 // ✅ Serve static files (CSS, JS, HTML)
@@ -70,9 +70,16 @@ app.get('/', (req, res) => {
 app.get('/get-data', (req, res) => {
     fs.readFile('data.json', 'utf8', (err, data) => {
         if (err) {
+            console.error('Error reading data:', err);
             return res.status(500).json({ success: false, message: 'Failed to read data!' });
         }
-        res.json(JSON.parse(data));
+        try {
+            const jsonData = JSON.parse(data);
+            res.json(jsonData);
+        } catch (parseError) {
+            console.error('Error parsing JSON:', parseError);
+            res.status(500).json({ success: false, message: 'Error processing data!' });
+        }
     });
 });
 
