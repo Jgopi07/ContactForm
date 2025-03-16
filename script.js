@@ -1,8 +1,6 @@
 // Wait until the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
-	console.log('New data:', newData);
-
 
     // Listen for form submission
     form.addEventListener('submit', async (event) => {
