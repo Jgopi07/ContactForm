@@ -1,82 +1,38 @@
-/* ✅ General Styling */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Form</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+            <!-- ✅ Name Input -->
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
 
-/* ✅ Body Styling */
-body {
-    background-color: #f4f4f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+            <!-- ✅ Email Input -->
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
 
-/* ✅ Form Container */
-.container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px;
-}
+            <!-- ✅ Message Textarea -->
+            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
 
-/* ✅ Heading */
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
+            <!-- ✅ Submit Button -->
+            <button type="submit">Submit</button>
+        </form>
 
-/* ✅ Input & Textarea Styling */
-input, textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.3s ease;
-}
+        <!-- ✅ Success/Error Message -->
+        <p id="responseMessage" style="
+            margin-top: 10px;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        "></p>
+    </div>
 
-/* ✅ Focus Effect */
-input:focus, textarea:focus {
-    border-color: #4caf50;
-    outline: none;
-}
-
-/* ✅ Button Styling */
-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* ✅ Response Message */
-#responseMessage {
-    text-align: center;
-    font-size: 16px;
-    margin-top: 10px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-/* ✅ Responsive Design */
-@media (max-width: 480px) {
-    .container {
-        width: 90%;
-    }
-}
+    <!-- ✅ Link to JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
