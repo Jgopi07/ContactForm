@@ -116,5 +116,8 @@ index.html
 GitHub: https://github.com/Jgopi07
 
 ---
+OUTPUT:
+<img width="1915" height="969" alt="image" src="https://github.com/user-attachments/assets/8783dbf3-5306-459f-9c11-f2988cc9e8c3" />
+
 
 ⭐ If you like this project, give it a star!
